@@ -43,7 +43,7 @@ Defines the `Option` class that represents both call and put options. It include
 
 Handles the sentiment analysis by using the **FinBERT** model to classify the sentiment of a given news text as positive, negative, or neutral. This sentiment influences the option strategy selection.
 
-- Loads the **FinBERT** model from the `yiyanghkust/finbert` pretrained model.
+- Loads the **FinBERT** model from the `yiyanghkust/finbert-tone` pretrained model.
 - The `get_sentiment` function classifies the sentiment into one of three categories: positive, negative, or neutral.
 
 ### 4. `strategy.py`
