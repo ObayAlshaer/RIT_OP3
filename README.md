@@ -1,31 +1,36 @@
 # RIT_OP3
-This project is a Python-based option strategy calculator that uses sentiment analysis, 
-market data, and option pricing to help users determine the most profitable options strategies 
-to implement based on current market conditions.
+This project is a Python-based options strategy calculator and automated trading bot that uses sentiment analysis, 
+market data, option pricing, and real-time trading to help users determine and execute the most profitable options strategies 
+based on current market conditions.
 
 ## Overview
 
 The program employs two primary strategies for calculating profits: **Straddle** and **Strangle**. 
-The strategy choice is further influenced by sentiment analysis of a given news text, using a pre-trained **FinBERT** model 
-that determines whether the sentiment is positive, neutral, or negative. Based on the sentiment, the program will choose 
+The strategy choice is influenced by sentiment analysis of a given news text, using a pre-trained **FinBERT** model 
+to determine whether the sentiment is positive, neutral, or negative. Based on the sentiment, the program chooses 
 whether to implement a **long** or **short** version of the strategies.
+
+Additionally, the program can **automatically execute trades** in the RIT trading simulator, enabling seamless integration 
+from analysis to execution.
 
 ### Key Features:
 1. **Sentiment Analysis with FinBERT** - Utilizes FinBERT, a model fine-tuned for financial text sentiment analysis.
 2. **Straddle and Strangle Option Strategies** - Calculates profit for different option strategies based on market moves.
-3. **Market Data Integration** - Retrieves market data such as the current price and option premiums from an external API.
-4. **Profit Calculation** - Calculates and prints the profit for both call and put options, both for long and short strategies.
+3. **Market Data Integration** - Retrieves market data such as the current price and option premiums from the RIT API.
+4. **Automated Trading Execution** - Places orders directly in the RIT trading simulator based on calculated strategies.
+5. **Profit Calculation** - Calculates and prints the profit for both call and put options, for long and short strategies.
 
 ## Components of the Project
 
 ### 1. `main.py`
 
-The entry point of the program. It fetches the current market price and applies the option strategies based on the news sentiment. It calculates the potential profit for each strategy and prints the results.
+The entry point of the program. It fetches the current market price and applies the option strategies based on the news sentiment. It calculates the potential profit for each strategy, determines the best strategy, and optionally executes trades.
 
 - Fetches the current market price.
 - Analyzes news sentiment using FinBERT.
-- Chooses the best strategy (Straddle or Strangle) based on the market sentiment and strategy profitability.
+- Chooses the best strategy (Straddle or Strangle) based on sentiment and profitability.
 - Displays the profit for both call and put options.
+- Automatically places orders in the RIT trading simulator.
 
 ### 2. `option.py`
 
@@ -36,7 +41,7 @@ Defines the `Option` class that represents both call and put options. It include
 
 ### 3. `sentiment.py`
 
-Handles the sentiment analysis by using the **FinBERT** model to classify the sentiment of a given news text as positive, negative, or neutral. This sentiment is used to influence the option strategy selection.
+Handles the sentiment analysis by using the **FinBERT** model to classify the sentiment of a given news text as positive, negative, or neutral. This sentiment influences the option strategy selection.
 
 - Loads the **FinBERT** model from the `yiyanghkust/finbert` pretrained model.
 - The `get_sentiment` function classifies the sentiment into one of three categories: positive, negative, or neutral.
@@ -52,18 +57,45 @@ Contains the main logic for the two option strategies: **Straddle** and **Strang
 
 ### 5. `utils.py`
 
-Contains utility functions that interact with an external API to fetch market data and option premiums. These functions make HTTP requests to retrieve the current market price and option premiums.
+Contains utility functions for interacting with the RIT trading simulator API to fetch market data, retrieve option premiums, and execute trades. New functionality includes the ability to place orders and fetch current positions.
 
-- `get_tick`: Fetches the current market price (tick) from the API.
+- `get_tick`: Fetches the current market price (tick) from the RIT API.
 - `get_option_premiums`: Fetches the current call and put premiums for a given ticker.
+- `place_order`: Places market or limit orders for a specified ticker in the RIT trading simulator.
+- `get_position`: Retrieves the current position for a specific ticker.
 
 ### 6. `exceptions.py`
 
 Defines custom exceptions for handling API-related errors in the program.
 
-## How the Strategy Works
+## Automated Trading Integration
 
-The core of the program revolves around two options strategies: **Straddle** and **Strangle**.
+The program can now directly execute trades in the RIT trading simulator based on the calculated strategies. 
+Using the `place_order` and `get_position` functions, it can:
+
+1. Fetch current market conditions and option premiums.
+2. Choose the optimal strategy based on sentiment and profitability.
+3. Execute trades automatically for both long and short positions.
+
+### Example Workflow:
+
+- Fetch the current tick and option premiums.
+- Analyze news sentiment.
+- Select the best strategy (e.g., Long Straddle).
+- Place orders for the call and put options at the calculated strike prices.
+
+### Example Trade Execution Code:
+
+```python
+# Example usage of automated trading:
+from utils import place_order, get_position
+
+# Placing a market order for 10 CALL options
+place_order("RTM", "BUY", quantity=10)
+
+# Checking the current position for RTM
+position = get_position("RTM")
+print(f"Current Position for RTM: {position}")
 
 ### Straddle Strategy
 In the **Straddle** strategy, the trader buys a call option and a put option with the same strike price and expiration date. The goal is to profit from large price movements, either up or down.
