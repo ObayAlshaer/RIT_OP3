@@ -4,7 +4,7 @@ class Option:
         self.strike_price = strike_price
         self.premium = premium
         self.quantity = quantity
-        self.is_short = is_short  # Track if the position is short
+        self.is_short = is_short  
 
     def calculate_profit(self, market_price):
         if self.option_type == "CALL":

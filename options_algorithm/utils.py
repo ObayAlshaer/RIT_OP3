@@ -1,8 +1,8 @@
 import requests
 from exceptions import ApiException  
 
-BASE_URL = "http://localhost:9999/v1"
-API_KEY = {"X-API-Key": "K5X4BO4C"}
+BASE_URL = "http://rit.telfer.uottawa.ca:10019/v1"
+API_KEY = {"X-API-Key": "YEX15AVL"}
 
 session = requests.Session()
 session.headers.update(API_KEY)

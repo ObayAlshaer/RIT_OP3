@@ -2,8 +2,8 @@ from transformers import BertTokenizer, BertForSequenceClassification
 from torch import softmax
 import torch
 
-tokenizer = BertTokenizer.from_pretrained("yiyanghkust/finbert")
-model = BertForSequenceClassification.from_pretrained("yiyanghkust/finbert")
+tokenizer = BertTokenizer.from_pretrained("yiyanghkust/finbert-tone")
+model = BertForSequenceClassification.from_pretrained("yiyanghkust/finbert-tone")
 
 def get_sentiment(text: str):
     inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
