@@ -27,3 +27,32 @@ def get_option_premiums():
     except requests.exceptions.RequestException as e:
         raise Exception(f"Failed to get option premiums: {e}")
 
+def place_order(ticker, order_type, quantity, price=None):
+    url = f"{BASE_URL}/securities/{ticker}/orders"
+    order_data = {
+        "ticker": ticker,
+        "type": order_type,
+        "quantity": quantity,
+    }
+    if price is not None:
+        order_data["price"] = price
+        order_data["action"] = "LIMIT"
+    else:
+        order_data["action"] = "MARKET"
+
+    try:
+        response = session.post(url, json=order_data)
+        response.raise_for_status()
+        print(f"Order placed: {order_type} {quantity} {ticker} @ {price if price else 'MARKET'}")
+    except requests.exceptions.RequestException as e:
+        raise ApiException(f"Failed to place order: {e}")
+
+def get_position(ticker):
+    try:
+        url = f"{BASE_URL}/securities/{ticker}/position"
+        response = session.get(url)
+        response.raise_for_status()
+        position = response.json()
+        return position.get("quantity", 0)
+    except requests.exceptions.RequestException as e:
+        raise ApiException(f"Failed to fetch position: {e}")
