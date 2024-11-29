@@ -86,7 +86,6 @@ Using the `place_order` and `get_position` functions, it can:
 
 ### Example Trade Execution Code:
 
-```python
 # Example usage of automated trading:
 from utils import place_order, get_position
 
